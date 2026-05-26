@@ -1,0 +1,7 @@
+TOPLEVEL_LANG = verilog
+SIM ?= icarus
+TOPLEVEL = rd_engine
+MODULE = test_rd_engine
+VERILOG_SOURCES = $(PWD)/rd_engine.v
+COMPILE_ARGS = -Prd_engine.GRID_W=32 -Prd_engine.GRID_H=32 -Prd_engine.CW=5 -Prd_engine.RW=5 -Prd_engine.AW=10
+include $(shell cocotb-config --makefiles)/Makefile.sim

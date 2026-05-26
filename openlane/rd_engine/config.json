@@ -1,0 +1,10 @@
+{
+  "DESIGN_NAME": "rd_engine",
+  "VERILOG_FILES": "dir::src/rd_engine.v",
+  "CLOCK_PORT": "clk_i",
+  "CLOCK_PERIOD": 28,
+  "FP_CORE_UTIL": 60,
+  "PL_TARGET_DENSITY_PCT": 65,
+  "RUN_ANTENNA_REPAIR": true,
+  "PDN_MULTILAYER": true
+}

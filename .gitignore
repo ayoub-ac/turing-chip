@@ -1,0 +1,9 @@
+# build artifacts
+openlane/*/runs/
+tb/sim_build/
+tb/__pycache__/
+**/__pycache__/
+*.vcd
+*.vvp
+results.xml
+golden/frame_*.png
