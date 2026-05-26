@@ -20,7 +20,6 @@ sign-off-clean ASIC does not.
 
 - [What it does](#what-it-does)
 - [The maths](#the-maths)
-- [Block diagram](#block-diagram)
 - [Interface (ports)](#interface-ports)
 - [Memory format](#memory-format)
 - [Clocking & throughput](#clocking--throughput)
@@ -63,12 +62,8 @@ additions, shifts and small fixed-point multiplies. The default **maze**
 regime (`F = 0.030`, `k = 0.057`) fills the grid with a connected labyrinth;
 other `(F, k)` pairs give spots, worms, mitosis and coral textures.
 
-## Block diagram
-
-![Block diagram](docs/diagram.png)
-
 The core is **pure logic** — no RAM macro inside. Grid storage is an external
-dual-buffer SRAM (two banks of `GRID_W·GRID_H` 32-bit words), which makes the
+dual-buffer SRAM (two banks of `GRID_W·GRID_H` 32-bit words), which keeps the
 core small, portable and easy to harden.
 
 ## Interface (ports)
