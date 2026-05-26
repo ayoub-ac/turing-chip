@@ -47,6 +47,8 @@ module rd_cell_pipe (
 	output reg [15:0] v_o;
 	localparam signed [31:0] FRAC = 12;
 	localparam signed [31:0] ONE = 4096;
+	localparam signed [31:0] CFF = 123;
+	localparam signed [31:0] CFK = 356;
 	function automatic [12:0] f13;
 		input reg [15:0] x;
 		f13 = x[12:0];
@@ -101,6 +103,10 @@ module rd_cell_pipe (
 	reg signed [27:0] fk_term;
 	reg signed [17:0] c3_un;
 	reg signed [17:0] c3_vn;
+	function automatic signed [27:0] sv2v_cast_28_signed;
+		input reg signed [27:0] inp;
+		sv2v_cast_28_signed = inp;
+	endfunction
 	function automatic signed [12:0] sv2v_cast_13_signed;
 		input reg signed [12:0] inp;
 		sv2v_cast_13_signed = inp;
@@ -110,8 +116,8 @@ module rd_cell_pipe (
 			;
 		du_term = (28'sd655 * r2_lapU) >>> 12;
 		dv_term = (28'sd328 * r2_lapV) >>> 12;
-		ff_term = (28'sd238 * $signed({15'b000000000000000, sv2v_cast_13_signed(ONE) - r2_uc})) >>> 12;
-		fk_term = (28'sd496 * $signed({15'b000000000000000, r2_vc})) >>> 12;
+		ff_term = ($signed(sv2v_cast_28_signed(CFF)) * $signed({15'b000000000000000, sv2v_cast_13_signed(ONE) - r2_uc})) >>> 12;
+		fk_term = ($signed(sv2v_cast_28_signed(CFK)) * $signed({15'b000000000000000, r2_vc})) >>> 12;
 		c3_un = (($signed({5'b00000, r2_uc}) + du_term[17:0]) - $signed({4'b0000, r2_uvv})) + ff_term[17:0];
 		c3_vn = (($signed({5'b00000, r2_vc}) + dv_term[17:0]) + $signed({4'b0000, r2_uvv})) - fk_term[17:0];
 	end

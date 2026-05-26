@@ -59,9 +59,9 @@ produces bit-identical output to a software reference, every time.
 Each cell reads its 8 toroidal neighbours and applies a 9-point Laplacian
 (Pearson kernel: 0.05 on diagonals, 0.20 on orthogonals, −1.0 on the centre),
 then steps both fields. No floating point and no division anywhere — only
-additions, shifts and small fixed-point multiplies. The default **labyrinth**
-regime (`F = 0.058`, `k = 0.063`) fills the grid with maze-like worms; other
-`(F, k)` pairs give spots, mitosis and coral textures.
+additions, shifts and small fixed-point multiplies. The default **maze**
+regime (`F = 0.030`, `k = 0.057`) fills the grid with a connected labyrinth;
+other `(F, k)` pairs give spots, worms, mitosis and coral textures.
 
 ## Block diagram
 
@@ -166,13 +166,13 @@ The render below is the actual placed-and-routed layout.
 | Metric              | Value                              |
 |---------------------|------------------------------------|
 | Process             | SkyWater sky130 (130 nm)           |
-| Standard cells      | 20,795                             |
-| Core area           | 119,971 µm²                        |
-| Core utilization    | 70 %                               |
+| Standard cells      | 21,048                             |
+| Core area           | 121,236 µm²                        |
+| Core utilization    | 69 %                               |
 | Clock               | 28 ns (≈ 36 MHz); path floor ≈ 19 ns |
-| Setup worst slack   | **+3.82 ns (MET)**                 |
+| Setup worst slack   | **+3.73 ns (MET)**                 |
 | Hold worst slack    | **+0.10 ns (MET)**                 |
-| Total power         | 20.8 mW                            |
+| Total power         | 21.8 mW                            |
 | Magic + KLayout DRC | **0 violations**                   |
 | Netgen LVS          | **0 errors (match)**               |
 

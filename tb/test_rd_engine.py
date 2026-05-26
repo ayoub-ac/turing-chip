@@ -11,7 +11,7 @@ GW, GH = 32, 32
 N_FRAMES = 150
 FRAC = 12
 ONE = 1 << FRAC
-Du, Dv, F, k = 655, 328, 238, 258
+Du, Dv, F, k = 655, 328, 123, 233
 WD, WO, WC = 205, 819, 4096
 FK = F + k
 

@@ -24,6 +24,9 @@ module rd_cell_pipe (
 );
     localparam int FRAC = 12;
     localparam int ONE  = 1 << FRAC;
+    // reaction constants (Q4.12): maze regime F=0.030, k=0.057
+    localparam int CFF = 123;             // F      = 0.030 * 4096
+    localparam int CFK = 356;             // F + k  = 0.087 * 4096
 
     // 13-bit field operands (value <= 4096)
     function automatic logic [12:0] f13(input logic [15:0] x); f13 = x[12:0]; endfunction
@@ -72,8 +75,8 @@ module rd_cell_pipe (
     always_comb begin
         du_term = (28'sd655 * r2_lapU) >>> 12;                       // 0.16*lapU
         dv_term = (28'sd328 * r2_lapV) >>> 12;                       // 0.08*lapV
-        ff_term = (28'sd238 * $signed({15'b0, (13'(ONE) - r2_uc)})) >>> 12;
-        fk_term = (28'sd496 * $signed({15'b0, r2_vc})) >>> 12;
+        ff_term = ($signed(28'(CFF)) * $signed({15'b0, (13'(ONE) - r2_uc)})) >>> 12;
+        fk_term = ($signed(28'(CFK)) * $signed({15'b0, r2_vc})) >>> 12;
         c3_un = $signed({5'b0, r2_uc}) + du_term[17:0] - $signed({4'b0, r2_uvv}) + ff_term[17:0];
         c3_vn = $signed({5'b0, r2_vc}) + dv_term[17:0] + $signed({4'b0, r2_uvv}) - fk_term[17:0];
     end
