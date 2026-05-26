@@ -65,27 +65,27 @@ other `(F, k)` pairs give spots, worms, mitosis and coral textures.
 
 ## Block diagram
 
-```
-                         ┌──────────────────── rd_engine ────────────────────┐
-   external               │                                                    │   external
-   framebuffer SRAM        │   ┌─ raster sweep FSM (row, col) ─┐               │   framebuffer SRAM
-   (read buffer)           │   │  IDLE→READ→COMPUTE→WRITE→DONE  │               │   (write buffer)
-        │  rd_addr_o ◄──────┼───┤                                │               │
-        │  rd_en_o   ◄──────┼───┤  fetch 9 toroidal neighbours   │               │
-        └─ rd_data_i ──────►┼───┤  into a 3×3 window register    │               │
-   {v,u} 32b                │   └──────────────┬─────────────────┘               │
-                            │                  ▼                                  │
-                            │        rd_cell_pipe  (3-stage pipeline)             │
-                            │   ┌────────┬────────────┬───────────────┐           │
-                            │   │ stage1 │  stage2    │   stage3      │            │
-                            │   │ sums   │ Laplacian  │ feed / kill   │           │
-                            │   │ + u·v  │ + u·v·v    │ + clamp[0,1]  │           │
-                            │   └────────┴────────────┴───────────────┘           │
-                            │                  │ next-state {v,u}                  │
-        wr_addr_o ◄─────────┼──────────────────┤                                  │
-        wr_en_o   ◄─────────┼──────────────────┤  buf_sel_o toggles each frame    │
-        wr_data_o ─────────►┼──────────────────┘  frame_o pulses each frame ─────►│
-   {v,u} 32b                └────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    RB[("Read buffer SRAM<br/>32b cells {V,U}")]
+    WB[("Write buffer SRAM<br/>32b cells {V,U}")]
+
+    subgraph ENG["rd_engine"]
+        direction TB
+        FSM["Raster sweep FSM<br/>IDLE → READ → COMPUTE → WRITE → DONE"]
+        FETCH["Fetch 9 toroidal neighbours<br/>into 3×3 window"]
+        subgraph CELL["rd_cell_pipe — 3-stage pipeline"]
+            direction LR
+            S1["stage 1<br/>sums + U·V"] --> S2["stage 2<br/>Laplacian + U·V·V"] --> S3["stage 3<br/>feed / kill + clamp"]
+        end
+        FSM --> FETCH --> CELL
+    end
+
+    RB -- "rd_data_i {V,U}" --> FETCH
+    ENG -. "rd_addr_o / rd_en_o" .-> RB
+    CELL -- "next-state {V,U}" --> WB
+    ENG -. "wr_addr_o / wr_en_o" .-> WB
+    ENG -. "buf_sel_o swaps banks each frame" .-> WB
 ```
 
 The core is **pure logic** — no RAM macro inside. Grid storage is an external
